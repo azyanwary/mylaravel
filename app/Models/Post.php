@@ -2,35 +2,30 @@
 
 namespace App\Models;
 
-class Post
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
 {
-    private static $blog_posts = [
-        [
-            "tittle" => "judul Post Pertama",
-            "slug" => "judul-Post-Pertama",
-            "author" => " spongebob",
-            "body" => " Organisasi atau pertubuhan (bahasa Belanda: organisatie) merupakan sekumpulan dua orang atau lebih yang berkumpul dalam wadah yang sama dan memiliki satu tujuan. 
-            sumber daya baik dengan metode, material, lingkungan dan uang serta sarana dan prasarana, dan lain sebagainya dengan efisien dan efektif untuk bisa mencapai tujuan organisasi.
-            [1]Dalam lingkup ilmu-ilmu sosial, organisasi dipelajari sebagai objek penelitian oleh antara lain ilmu sosiologi, ekonomi, politik, psikologi, antropologi, sejarah, 
-            dan manajemen."
-        ],
-        [
-            "tittle" => "judul Post kedua",
-            "slug" => "judul-Post-kedua",
-            "author" => " patrick",
-            "body" => "Components and slots provide similar benefits to sections, layouts, and includes; however, some may find the mental model of components and slots easier to understand. There are two approaches to writing components: class based components and anonymous components.."
-        ]
-    ];
+    use HasFactory;
+    
 
-    public static function all(){
-       
-        return collect(self::$blog_posts);
+    // HUBUNGAN TIAP TABEL
+
+    //untuk menambahkan data semua di tinker, (menggunakan $post -> create([])), data yang boleh diisi sisanya tidak boleh
+    // protected $fillable =['title', 'excerpt', 'body'];
+
+    // data yang tidak boleh boleh diisi sisanya boleh
+    protected $guarded = ['id'];
+
+    public function category(){
+
+        return $this->belongsTo(Category::class);
     }
 
-    public static function find($slug){
-    
-        $posts = static::all();
-        return $posts ->firstWhere('slug', $slug);
+    // ketika database berbeda dengan methor yang dibuat, maka buat inisiasi, contoh, di database tidak ada table author, maka inisiasi dengan field yang ada "user_id" pada tabel yang diinginkan
+    public function author(){
+
+        return $this->belongsTo(User::class,'user_id');
     }
-    
 }
